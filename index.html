@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tính Thuế TNCN 2026 - Chuẩn Quy Định Mới - Thiết kế bởi Nguyễn Tiến Duẩn với sự hỗ trợ của Gemini</title>
+    <title>Tính Thuế TNCN 2026 - Bản Chuẩn</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root { --primary: #2c3e50; --secondary: #27ae60; --accent: #2980b9; }
         body { font-family: "Times New Roman", serif; background: #f4f7f6; display: flex; justify-content: center; padding: 20px; color: #333; }
-        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 650px; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 600px; }
         .logo-wrapper { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
         .logo-wrapper img { max-height: 70px; margin-bottom: 10px; }
         .tab-container { display: flex; margin-bottom: 20px; background: #eee; border-radius: 8px; padding: 5px; }
@@ -20,21 +20,32 @@
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         button.btn-calc { width: 100%; padding: 15px; background: var(--secondary); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 18px; font-weight: bold; margin-top: 10px; }
         
-        /* Giao diện Phiếu In */
-        #print-section { display: none; margin-top: 30px; padding: 25px; border: 1px solid #333; background: #fff; position: relative; }
+        /* CẤU HÌNH VÙNG IN - KHẮC PHỤC LỖI TRẮNG TRANG */
+        #print-section { 
+            display: none; 
+            margin-top: 30px; 
+            padding: 30px; 
+            border: 1px solid #333; 
+            background: #fff; 
+            width: 100%;
+            box-sizing: border-box;
+            overflow: visible;
+        }
         .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #ccc; }
         .row.total { font-weight: bold; font-size: 1.2rem; border-top: 2px solid #333; margin-top: 10px; border-bottom: none; }
         .tax-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 15px; }
         .tax-table th, .tax-table td { border: 1px solid #ddd; padding: 5px; text-align: center; }
+        #btn-group { margin-top: 20px; display: none; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn-download { background: #34495e; color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="logo-wrapper">
-        <img src="logo.png" alt="Logo Công Ty" onerror="this.style.display='none'">
-        <h2 style="margin:0">CÔNG CỤ TÍNH THUẾ TNCN 2026</h2>
-        <p style="font-size: 14px; color: #666;">Cập nhật theo Luật Thuế TNCN mới nhất</p>
+        <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+        <h2 style="margin:0">TÍNH THUẾ TNCN 2026</h2>
+        <p style="font-size: 13px; color: #666;">(Giảm trừ gia cảnh: 15.5tr | Phụ thuộc: 6.2tr)</p>
     </div>
 
     <div class="tab-container">
@@ -44,7 +55,7 @@
 
     <div class="form-group">
         <label id="income-label">Thu nhập Gross hàng tháng:</label>
-        <input type="text" id="income-input" oninput="formatCurrencyInput(this)" placeholder="Nhập số tiền...">
+        <input type="text" id="income-input" oninput="formatCurrency(this)" placeholder="Ví dụ: 30,000,000">
     </div>
 
     <div class="grid">
@@ -53,52 +64,40 @@
             <input type="number" id="dependents" value="0" min="0">
         </div>
         <div class="form-group">
-            <label>Khoản miễn thuế:</label>
-            <input type="text" id="nonTaxable" oninput="formatCurrencyInput(this)" value="730,000">
+            <label>Miễn thuế (Ăn trưa...):</label>
+            <input type="text" id="nonTaxable" oninput="formatCurrency(this)" value="730,000">
         </div>
     </div>
 
     <div class="form-group">
-        <label>Đóng Bảo hiểm xã hội:</label>
+        <label>Bảo hiểm xã hội:</label>
         <select id="insType" onchange="toggleIns()">
             <option value="full">Đóng trên 100% lương</option>
             <option value="custom">Mức đóng cố định</option>
         </select>
-        <input type="text" id="insCustom" style="display:none; margin-top:10px;" oninput="formatCurrencyInput(this)" placeholder="Nhập mức lương đóng BH...">
+        <input type="text" id="insCustom" style="display:none; margin-top:10px;" oninput="formatCurrency(this)" placeholder="Nhập mức lương đóng BH...">
     </div>
 
-    <button class="btn-calc" onclick="process()">TÍNH TOÁN CHI TIẾT</button>
+    <button class="btn-calc" onclick="process()">XEM KẾ QUẢ CHI TIẾT</button>
 
     <div id="print-section">
-        <div style="text-align:center;">
-            <h3>PHIẾU DIỄN GIẢI THU NHẬP</h3>
-            <p id="res-mode" style="font-weight:bold; color:var(--accent)"></p>
+        <div style="text-align:center; border-bottom: 2px solid #333; margin-bottom: 15px;">
+            <h3 style="margin-bottom: 5px;">PHIẾU DIỄN GIẢI THUẾ TNCN 2026</h3>
+            <p id="res-mode" style="font-weight:bold; color:var(--accent); font-size: 14px; margin: 5px;"></p>
         </div>
-        <div class="row"><span>Lương Gross:</span> <span id="out-gross"></span></div>
-        <div class="row"><span>Bảo hiểm bắt buộc (10.5%):</span> <span id="out-bh"></span></div>
+        <div class="row"><span>Lương Gross dự kiến:</span> <span id="out-gross"></span></div>
+        <div class="row"><span>Bảo hiểm (10.5%):</span> <span id="out-bh"></span></div>
         <div class="row"><span>Giảm trừ gia cảnh:</span> <span id="out-gt"></span></div>
         <div class="row"><span>Thu nhập tính thuế:</span> <span id="out-tntt"></span></div>
-        <div class="row" style="color:red"><span>Thuế TNCN:</span> <span id="out-tax"></span></div>
+        <div class="row" style="color:red; font-weight:bold;"><span>Thuế TNCN phải nộp:</span> <span id="out-tax"></span></div>
         <div class="row total"><span>THỰC NHẬN (NET):</span> <span id="out-net"></span></div>
         
-        <details style="margin-top:15px; font-size: 12px;">
-            <summary>Xem biểu thuế áp dụng (Bậc 5 mới)</summary>
-            <table class="tax-table">
-                <thead><tr><th>Bậc</th><th>Thu nhập tính thuế/tháng</th><th>Thuế suất</th></tr></thead>
-                <tbody>
-                    <tr><td>1</td><td>Đến 10trđ</td><td>5%</td></tr>
-                    <tr><td>2</td><td>10trđ - 30trđ</td><td>10%</td></tr>
-                    <tr><td>3</td><td>30trđ - 60trđ</td><td>20%</td></tr>
-                    <tr><td>4</td><td>60trđ - 100trđ</td><td>30%</td></tr>
-                    <tr><td>5</td><td>Trên 100trđ</td><td>35%</td></tr>
-                </tbody>
-            </table>
-        </details>
+        <p style="font-size: 11px; margin-top: 20px; font-style: italic;">* Lưu ý: Biểu thuế lũy tiến 5 bậc dự kiến áp dụng từ 2026.</p>
     </div>
 
-    <div id="btn-group" style="display:none; grid-template-columns: 1fr 1fr; gap:10px; margin-top:15px;">
-        <button style="background:#34495e; padding:10px; color:white; border-radius:5px; border:none; cursor:pointer;" onclick="exportPDF('a4')">Tải PDF A4</button>
-        <button style="background:#34495e; padding:10px; color:white; border-radius:5px; border:none; cursor:pointer;" onclick="exportPDF('a5')">Tải PDF A5</button>
+    <div id="btn-group">
+        <button class="btn-download" onclick="exportPDF('a4')">Xuất PDF khổ A4</button>
+        <button class="btn-download" onclick="exportPDF('a5')">Xuất PDF khổ A5</button>
     </div>
 </div>
 
@@ -110,7 +109,7 @@
         document.getElementById('tab-net').className = m === 'NET' ? 'tab active' : 'tab';
         document.getElementById('income-label').innerText = m === 'GROSS' ? 'Thu nhập Gross hàng tháng:' : 'Thu nhập Net mong muốn:';
     }
-    function formatCurrencyInput(i) {
+    function formatCurrency(i) {
         let v = i.value.replace(/\D/g, "");
         i.value = v ? Number(v).toLocaleString('en-US') : "";
     }
@@ -127,38 +126,49 @@
         else if (ti > 30) tax = (ti - 30) * 0.2 + 2.5;
         else if (ti > 10) tax = (ti - 10) * 0.1 + 0.5;
         else tax = ti * 0.05;
-        tax = Math.round(tax * 1000000);
-        return { bh, gt, tntt, tax, net: gross - bh - tax };
+        return { bh, gt, tntt, tax: Math.round(tax * 1000000), net: gross - bh - Math.round(tax * 1000000) };
     }
 
     function process() {
         let input = parseV('income-input'), nonTax = parseV('nonTaxable'), deps = parseInt(document.getElementById('dependents').value) || 0;
         let iType = document.getElementById('insType').value, iCustom = parseV('insCustom');
-        let fGross = input, res;
+        let fGross = input;
+
         if (mode === 'NET') {
-            let l = input, h = input * 2;
-            while (h - l > 1) {
+            let l = input, h = input * 3;
+            for(let i=0; i<50; i++) {
                 fGross = (l + h) / 2;
                 if (calcTax(fGross, nonTax, deps, iType, iCustom).net < input) l = fGross; else h = fGross;
             }
             fGross = h;
         }
-        res = calcTax(fGross, nonTax, deps, iType, iCustom);
-        const fmt = n => Math.round(n).toLocaleString('en-US') + 'đ';
+
+        let res = calcTax(fGross, nonTax, deps, iType, iCustom);
+        const fmt = n => Math.round(n).toLocaleString('en-US') + ' đ';
+        
         document.getElementById('out-gross').innerText = fmt(fGross);
         document.getElementById('out-bh').innerText = fmt(res.bh);
         document.getElementById('out-gt').innerText = fmt(res.gt);
         document.getElementById('out-tntt').innerText = fmt(res.tntt);
         document.getElementById('out-tax').innerText = fmt(res.tax);
         document.getElementById('out-net').innerText = fmt(res.net);
-        document.getElementById('res-mode').innerText = mode === 'GROSS' ? 'DIỄN GIẢI TỪ LƯƠNG GROSS' : 'DIỄN GIẢI TỪ LƯƠNG NET';
+        document.getElementById('res-mode').innerText = mode === 'GROSS' ? 'LƯƠNG QUY ĐỔI GROSS → NET' : 'LƯƠNG QUY ĐỔI NET → GROSS';
+        
         document.getElementById('print-section').style.display = 'block';
         document.getElementById('btn-group').style.display = 'grid';
     }
 
     function exportPDF(s) {
-        const e = document.getElementById('print-section');
-        html2pdf().set({ margin: 0.5, filename: 'ThueTNCN-2026.pdf', jsPDF: { format: s } }).from(e).save();
+        const element = document.getElementById('print-section');
+        // Ép cuộn trang lên đầu để thư viện chụp được toàn bộ khung hình
+        window.scrollTo(0,0);
+        const opt = {
+            margin: 0.5,
+            filename: 'Ket-qua-tinh-thue.pdf',
+            html2canvas: { scale: 2, scrollY: 0, scrollX: 0, useCORS: true },
+            jsPDF: { unit: 'in', format: s, orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(element).save();
     }
 </script>
 </body>
