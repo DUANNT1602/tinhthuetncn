@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TaxAnalytics Pro - Biểu đồ thông minh</title>
+    <title>TaxAnalytics Pro - Blue Theme Tax</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -17,6 +17,7 @@
             --text-main: #2D3436;
             --text-sub: #636E72;
             --accent: #F95211;
+            --tax-blue: #0984E3; /* Màu xanh dương mới cho Thuế */
         }
 
         body { 
@@ -26,7 +27,6 @@
             display: flex; justify-content: center; 
             padding: 40px 20px; color: var(--text-main); 
             min-height: 100vh; margin: 0;
-            top: 0 !important;
         }
         
         .container { 
@@ -77,15 +77,14 @@
         }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Biểu đồ rộng hơn để hiển thị số rõ hơn */
         .chart-container { width: 320px; margin: 0 auto 25px auto; position: relative; }
         
         .res-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #F1F2F6; }
         .res-total { font-size: 28px; color: var(--accent); font-weight: 800; text-align: center; margin-top: 10px; }
 
         .compare-box {
-            margin-top: 20px; padding: 15px; background: #FFF9F6; 
-            border-left: 4px solid var(--accent); border-radius: 12px; font-size: 13px;
+            margin-top: 20px; padding: 15px; background: #F0F7FF; 
+            border-left: 4px solid var(--tax-blue); border-radius: 12px; font-size: 13px;
         }
 
         #btn-group { display: none; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
@@ -97,7 +96,7 @@
 <div class="container">
     <div class="logo-wrapper">
         <h2 class="notranslate">TaxAnalytics Pro</h2>
-        <p style="color: var(--text-sub); font-size: 13px; margin-top: 5px;">Công cụ phân tích thu nhập đa chiều</p>
+        <p style="color: var(--text-sub); font-size: 13px; margin-top: 5px;">Minh bạch thu nhập - Tối ưu thuế</p>
     </div>
 
     <div class="tab-group" style="margin-top: 25px;">
@@ -117,8 +116,8 @@
     </div>
 
     <div class="form-group">
-        <label id="income-label">Thu nhập hàng tháng (VNĐ)</label>
-        <input type="text" id="income-input" oninput="formatCurrency(this)" placeholder="Nhập số tiền...">
+        <label>Thu nhập hàng tháng (VNĐ)</label>
+        <input type="text" id="income-input" oninput="formatCurrency(this)" placeholder="Nhập lương hàng tháng...">
     </div>
 
     <div class="grid">
@@ -138,10 +137,10 @@
             <option value="full">Đóng trên 100% lương</option>
             <option value="custom">Mức đóng cố định</option>
         </select>
-        <input type="text" id="insCustom" style="display:none; margin-top:12px;" oninput="formatCurrency(this)" placeholder="Mức lương đóng BH...">
+        <input type="text" id="insCustom" style="display:none; margin-top:12px;" oninput="formatCurrency(this)" placeholder="Lương đóng BH...">
     </div>
 
-    <button class="btn-calc" onclick="process()">Bắt đầu phân tích</button>
+    <button class="btn-calc" onclick="process()">Phân tích thu nhập</button>
 
     <div id="result-card">
         <div class="chart-container">
@@ -149,7 +148,7 @@
         </div>
         <div class="res-row"><span class="res-label">Lương Gross</span><span class="res-value" id="web-gross"></span></div>
         <div class="res-row"><span class="res-label">Bảo hiểm (10.5%)</span><span class="res-value" id="web-bh"></span></div>
-        <div class="res-row"><span class="res-label">Thuế TNCN</span><span class="res-value" id="web-tax" style="color:#EB4D4B"></span></div>
+        <div class="res-row"><span class="res-label">Thuế TNCN</span><span class="res-value" id="web-tax" style="color:var(--tax-blue)"></span></div>
         <div style="text-align: center; margin-top: 15px;">
             <span style="font-size: 12px; color: var(--text-sub); font-weight: 700;">THỰC NHẬN (NET)</span>
             <div class="res-total" id="web-net"></div>
@@ -159,21 +158,18 @@
 
     <div id="btn-group">
         <button class="btn-download" onclick="exportPDF('a4')">Tải báo cáo PDF</button>
-        <button class="btn-download" onclick="location.reload()" style="background:#636E72">Tính toán lại</button>
+        <button class="btn-download" onclick="location.reload()" style="background:#636E72">Làm mới</button>
     </div>
 </div>
 
 <script>
     let currentMode = 'GROSS', currentYear = 2026, myChart = null;
-
-    // Đăng ký Plugin hiển thị số liệu
     Chart.register(ChartDataLabels);
 
     function setMode(m, y) {
         currentMode = m; currentYear = y;
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         document.getElementById(`tab-${m.toLowerCase()}-${y}`).classList.add('active');
-        document.getElementById('income-label').innerText = `Thu nhập ${m} (${y})`;
     }
 
     function formatCurrency(i) {
@@ -206,8 +202,7 @@
             else if (ti > 5) tax = (ti - 5) * 0.1 + 0.25;
             else tax = ti * 0.05;
         }
-        let tFinal = Math.round(tax * 1000000);
-        return { bh, tax: tFinal, net: gross - bh - tFinal };
+        return { bh, tax: Math.round(tax * 1000000), net: gross - bh - Math.round(tax * 1000000) };
     }
 
     function updateChart(net, tax, bh) {
@@ -220,23 +215,18 @@
                 labels: ['Thực nhận', 'Thuế TNCN', 'Bảo hiểm'],
                 datasets: [{
                     data: [net, tax, bh],
-                    backgroundColor: ['#F95211', '#EB4D4B', '#2D3436'],
+                    backgroundColor: ['#F95211', '#0984E3', '#2D3436'], // Xanh dương cho Thuế
                     borderWidth: 2,
                     borderColor: '#ffffff'
                 }]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: true,
                 plugins: {
                     legend: { display: false },
                     datalabels: {
                         color: '#fff',
                         font: { weight: 'bold', size: 11 },
-                        formatter: (value) => {
-                            if (value < 500000) return ""; // Không hiện nếu số quá nhỏ tránh đè nhau
-                            return (value / 1000000).toFixed(1) + "M";
-                        }
+                        formatter: (value) => (value > 500000 ? (value / 1000000).toFixed(1) + "M" : "")
                     }
                 },
                 cutout: '65%'
@@ -267,8 +257,7 @@
         document.getElementById('web-net').innerText = fmt(res.net);
         
         let comp = calcTax(fGross, nonTax, deps, iType, iCustom, (currentYear === 2026 ? 2025 : 2026));
-        let diff = Math.abs(res.tax - comp.tax);
-        document.getElementById('web-compare').innerHTML = `💡 <b>So sánh:</b> Luật năm ${(currentYear === 2026 ? 2025 : 2026)} nộp ${fmt(comp.tax)} thuế. ${currentYear===2026?'Tiết kiệm':'Nộp thêm'} <b>${fmt(diff)}</b>.`;
+        document.getElementById('web-compare').innerHTML = `💡 <b>So sánh:</b> Luật năm ${(currentYear === 2026 ? 2025 : 2026)} nộp ${fmt(comp.tax)} thuế. ${currentYear===2026?'Tiết kiệm':'Nộp thêm'} <b>${fmt(Math.abs(res.tax - comp.tax))}</b>.`;
 
         updateChart(res.net, res.tax, res.bh);
         document.getElementById('result-card').style.display = 'block';
@@ -278,7 +267,7 @@
 
     function exportPDF(size) {
         const element = document.getElementById('result-card');
-        html2pdf().set({ margin: 0.5, filename: 'Bao-cao-thu-nhap.pdf', html2canvas: { scale: 3 }, jsPDF: { format: size } }).from(element).save();
+        html2pdf().set({ margin: 0.5, filename: 'TaxReport.pdf', html2canvas: { scale: 3 }, jsPDF: { format: size } }).from(element).save();
     }
 </script>
 </body>
