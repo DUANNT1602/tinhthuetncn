@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TaxAnalytics Pro - Full Features</title>
+    <title>TaxAnalytics Pro - Biểu đồ thông minh</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
@@ -36,12 +37,6 @@
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
             border: 1px solid rgba(255, 255, 255, 0.4);
             width: 100%; max-width: 650px; 
-        }
-
-        .header-tools { display: flex; justify-content: flex-end; margin-bottom: 20px; }
-        .custom-lang-select {
-            padding: 8px 15px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);
-            background: white; font-size: 13px; font-weight: 600; cursor: pointer;
         }
 
         .logo-wrapper h2 { 
@@ -75,7 +70,6 @@
             font-size: 16px; font-weight: 700; box-shadow: 0 10px 25px rgba(249, 82, 17, 0.3);
             transition: 0.3s; margin-top: 10px;
         }
-        button.btn-calc:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(249, 82, 17, 0.4); }
 
         #result-card {
             display: none; margin-top: 30px; background: white; 
@@ -83,38 +77,30 @@
         }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .chart-container { width: 200px; margin: 0 auto 20px auto; }
+        /* Biểu đồ rộng hơn để hiển thị số rõ hơn */
+        .chart-container { width: 320px; margin: 0 auto 25px auto; position: relative; }
+        
         .res-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #F1F2F6; }
-        .res-total { font-size: 26px; color: var(--accent); font-weight: 800; text-align: center; margin-top: 10px; }
+        .res-total { font-size: 28px; color: var(--accent); font-weight: 800; text-align: center; margin-top: 10px; }
 
         .compare-box {
             margin-top: 20px; padding: 15px; background: #FFF9F6; 
-            border-left: 4px solid var(--accent); border-radius: 12px; font-size: 13px; line-height: 1.6;
+            border-left: 4px solid var(--accent); border-radius: 12px; font-size: 13px;
         }
 
         #btn-group { display: none; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
         .btn-download { background: #2D3436; color: white; padding: 15px; border: none; border-radius: 15px; cursor: pointer; font-weight: 600; }
-
-        #google_translate_element { display: none !important; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header-tools">
-        <select class="custom-lang-select" onchange="changeLanguage(this.value)">
-            <option value="vi">🇻🇳 Tiếng Việt</option>
-            <option value="en">🇺🇸 English</option>
-            <option value="zh-CN">🇨🇳 简体中文</option>
-        </select>
-    </div>
-
     <div class="logo-wrapper">
         <h2 class="notranslate">TaxAnalytics Pro</h2>
-        <p style="color: var(--text-sub); font-size: 13px; margin: 5px 0 25px 0;">Phân tích lương Gross ↔ Net & Bảo hiểm</p>
+        <p style="color: var(--text-sub); font-size: 13px; margin-top: 5px;">Công cụ phân tích thu nhập đa chiều</p>
     </div>
 
-    <div class="tab-group">
+    <div class="tab-group" style="margin-top: 25px;">
         <span class="tab-label">Quy định từ 2026</span>
         <div class="tab-container">
             <div id="tab-gross-2026" class="tab active" onclick="setMode('GROSS', 2026)">Gross → Net</div>
@@ -132,7 +118,7 @@
 
     <div class="form-group">
         <label id="income-label">Thu nhập hàng tháng (VNĐ)</label>
-        <input type="text" id="income-input" oninput="formatCurrency(this)" placeholder="Ví dụ: 20,000,000">
+        <input type="text" id="income-input" oninput="formatCurrency(this)" placeholder="Nhập số tiền...">
     </div>
 
     <div class="grid">
@@ -152,10 +138,10 @@
             <option value="full">Đóng trên 100% lương</option>
             <option value="custom">Mức đóng cố định</option>
         </select>
-        <input type="text" id="insCustom" style="display:none; margin-top:12px;" oninput="formatCurrency(this)" placeholder="Nhập lương đóng bảo hiểm...">
+        <input type="text" id="insCustom" style="display:none; margin-top:12px;" oninput="formatCurrency(this)" placeholder="Mức lương đóng BH...">
     </div>
 
-    <button class="btn-calc" onclick="process()">Phân tích thu nhập</button>
+    <button class="btn-calc" onclick="process()">Bắt đầu phân tích</button>
 
     <div id="result-card">
         <div class="chart-container">
@@ -173,14 +159,15 @@
 
     <div id="btn-group">
         <button class="btn-download" onclick="exportPDF('a4')">Tải báo cáo PDF</button>
-        <button class="btn-download" onclick="location.reload()" style="background:#636E72">Làm mới</button>
+        <button class="btn-download" onclick="location.reload()" style="background:#636E72">Tính toán lại</button>
     </div>
 </div>
 
-<div id="google_translate_element"></div>
-
 <script>
     let currentMode = 'GROSS', currentYear = 2026, myChart = null;
+
+    // Đăng ký Plugin hiển thị số liệu
+    Chart.register(ChartDataLabels);
 
     function setMode(m, y) {
         currentMode = m; currentYear = y;
@@ -226,17 +213,34 @@
     function updateChart(net, tax, bh) {
         const ctx = document.getElementById('taxChart').getContext('2d');
         if (myChart) myChart.destroy();
+        
         myChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Thực nhận', 'Thuế', 'Bảo hiểm'],
+                labels: ['Thực nhận', 'Thuế TNCN', 'Bảo hiểm'],
                 datasets: [{
                     data: [net, tax, bh],
                     backgroundColor: ['#F95211', '#EB4D4B', '#2D3436'],
-                    borderWidth: 0
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
                 }]
             },
-            options: { plugins: { legend: { display: false } }, cutout: '75%' }
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { display: false },
+                    datalabels: {
+                        color: '#fff',
+                        font: { weight: 'bold', size: 11 },
+                        formatter: (value) => {
+                            if (value < 500000) return ""; // Không hiện nếu số quá nhỏ tránh đè nhau
+                            return (value / 1000000).toFixed(1) + "M";
+                        }
+                    }
+                },
+                cutout: '65%'
+            }
         });
     }
 
@@ -264,7 +268,7 @@
         
         let comp = calcTax(fGross, nonTax, deps, iType, iCustom, (currentYear === 2026 ? 2025 : 2026));
         let diff = Math.abs(res.tax - comp.tax);
-        document.getElementById('web-compare').innerHTML = `💡 <b>So sánh:</b> Theo luật năm ${(currentYear === 2026 ? 2025 : 2026)}, bạn nộp ${fmt(comp.tax)} tiền thuế. ${currentYear===2026?'Tiết kiệm':'Nộp thêm'} <b>${fmt(diff)}</b>.`;
+        document.getElementById('web-compare').innerHTML = `💡 <b>So sánh:</b> Luật năm ${(currentYear === 2026 ? 2025 : 2026)} nộp ${fmt(comp.tax)} thuế. ${currentYear===2026?'Tiết kiệm':'Nộp thêm'} <b>${fmt(diff)}</b>.`;
 
         updateChart(res.net, res.tax, res.bh);
         document.getElementById('result-card').style.display = 'block';
@@ -272,18 +276,10 @@
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 
-    function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'vi'}, 'google_translate_element'); }
-    function changeLanguage(langCode) {
-        const select = document.querySelector('select.goog-te-combo');
-        if (select) { select.value = langCode; select.dispatchEvent(new Event('change')); }
-    }
-
     function exportPDF(size) {
         const element = document.getElementById('result-card');
-        html2pdf().set({ margin: 0.5, filename: 'TaxReport.pdf', html2canvas: { scale: 2 }, jsPDF: { format: size } }).from(element).save();
+        html2pdf().set({ margin: 0.5, filename: 'Bao-cao-thu-nhap.pdf', html2canvas: { scale: 3 }, jsPDF: { format: size } }).from(element).save();
     }
 </script>
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
 </body>
 </html>
