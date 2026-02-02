@@ -3,47 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>So Sánh Thuế TNCN 2025 vs 2026</title>
+    <title>Thuế TNCN 3D Glassmorphism - Cam Năng Động</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
-        :root { --primary: #2c3e50; --secondary: #27ae60; --accent: #2980b9; --old-law: #8e44ad; }
-        body { font-family: "Times New Roman", serif; background: #f4f7f6; display: flex; justify-content: center; padding: 20px; color: #333; position: relative; top: 0 !important; }
-        
-        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 650px; }
-        
-        .lang-switcher { display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 15px; }
-        .lang-switcher button { background: #fff; border: 1px solid #ddd; padding: 5px 10px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 12px; }
-        .lang-switcher img { width: 20px; height: 14px; object-fit: cover; }
+        :root { 
+            --primary-orange: #ff7e5f; 
+            --deep-orange: #feb47b; 
+            --accent-dark: #d35400;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --shadow-3d: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
 
-        .logo-wrapper { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
-        .logo-wrapper img { max-height: 60px; }
+        body { 
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; 
+            /* Nền màu cam hiệu ứng Gradient 3D */
+            background: linear-gradient(135deg, #ff9966 0%, #ff5e62 100%);
+            background-attachment: fixed;
+            display: flex; 
+            justify-content: center; 
+            padding: 20px; 
+            color: #333; 
+            min-height: 100vh;
+            position: relative; 
+            top: 0 !important; 
+        }
         
-        /* Tab Styles */
+        /* Hiệu ứng Glassmorphism cho khung chính */
+        .container { 
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px); /* Làm mờ nền phía sau */
+            -webkit-backdrop-filter: blur(15px);
+            padding: 30px; 
+            border-radius: 20px; 
+            box-shadow: var(--shadow-3d);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            width: 100%; 
+            max-width: 650px; 
+            transition: transform 0.3s ease;
+        }
+
+        /* Menu Ngôn ngữ xổ xuống */
+        .header-tools { display: flex; justify-content: flex-end; align-items: center; margin-bottom: 20px; gap: 10px; }
+        .custom-lang-select {
+            padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.1);
+            background: rgba(255,255,255,0.9); font-size: 13px; cursor: pointer; outline: none;
+        }
+
+        .logo-wrapper { text-align: center; margin-bottom: 20px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 15px; }
+        .logo-wrapper img { max-height: 60px; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1)); }
+        
         .tab-group { margin-bottom: 15px; }
-        .tab-label { font-size: 12px; font-weight: bold; color: #7f8c8d; text-transform: uppercase; margin-bottom: 5px; display: block; }
-        .tab-container { display: flex; background: #eee; border-radius: 8px; padding: 4px; gap: 4px; margin-bottom: 10px; }
-        .tab { flex: 1; text-align: center; padding: 10px 5px; cursor: pointer; border-radius: 6px; font-weight: bold; font-size: 13px; transition: 0.3s; color: #666; }
-        .tab.active { background: white; color: var(--accent); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .tab.active.old { color: var(--old-law); }
+        .tab-label { font-size: 11px; font-weight: bold; color: #e67e22; text-transform: uppercase; margin-bottom: 6px; display: block; letter-spacing: 1px; }
+        .tab-container { display: flex; background: rgba(0,0,0,0.05); border-radius: 12px; padding: 5px; gap: 5px; }
         
-        .form-group { margin-bottom: 12px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 15px; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        .tab { 
+            flex: 1; text-align: center; padding: 12px 5px; cursor: pointer; border-radius: 10px; 
+            font-weight: bold; font-size: 13px; transition: 0.3s; color: #7f8c8d; 
+        }
+        .tab.active { 
+            background: white; color: #d35400; 
+            box-shadow: 0 4px 15px rgba(211, 84, 0, 0.2); 
+        }
         
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        button.btn-calc { width: 100%; padding: 15px; background: var(--secondary); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 18px; font-weight: bold; margin-top: 10px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: #444; }
+        input, select { 
+            width: 100%; padding: 12px; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; 
+            background: rgba(255,255,255,0.9); font-size: 16px; outline: none; transition: 0.2s;
+        }
+        input:focus { border-color: #ff7e5f; box-shadow: 0 0 0 3px rgba(255, 126, 95, 0.2); }
         
-        #print-section { display: block; visibility: hidden; height: 0; overflow: hidden; padding: 40px; background: #fff; }
-        #print-section.visible { visibility: visible; height: auto; border: 1px solid #333; margin-top: 30px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         
-        .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #ccc; }
-        .row.total { font-weight: bold; font-size: 1.4rem; border-top: 2px solid #333; margin-top: 15px; border-bottom: none; }
+        /* Nút tính toán 3D */
+        button.btn-calc { 
+            width: 100%; padding: 18px; 
+            background: linear-gradient(to right, #ff416c, #ff4b2b); 
+            color: white; border: none; border-radius: 12px; cursor: pointer; 
+            font-size: 18px; font-weight: bold; margin-top: 15px; 
+            box-shadow: 0 8px 20px rgba(255, 75, 43, 0.3);
+            transition: 0.3s;
+        }
+        button.btn-calc:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(255, 75, 43, 0.4); }
         
-        #btn-group { margin-top: 20px; display: none; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn-download { background: #34495e; color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        /* Phiếu kết quả */
+        #print-section { 
+            display: block; visibility: hidden; height: 0; overflow: hidden;
+            padding: 40px; background: #fff; border-radius: 15px;
+        }
+        #print-section.visible { visibility: visible; height: auto; border: 1px solid #eee; margin-top: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        
+        .row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f1f1; }
+        .row.total { 
+            font-weight: bold; font-size: 1.6rem; border-top: 3px solid #ff7e5f; 
+            margin-top: 15px; border-bottom: none; color: #ff4b2b;
+        }
+        
+        #btn-group { margin-top: 20px; display: none; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .btn-download { 
+            background: #2c3e50; color: white; padding: 14px; border: none; 
+            border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.3s;
+        }
+        .btn-download:hover { background: #1a252f; }
 
+        /* Ẩn widget gốc */
         #google_translate_element { display: none !important; }
         .goog-te-banner-frame { display: none !important; }
         body { top: 0px !important; }
@@ -52,20 +117,26 @@
 <body>
 
 <div class="container">
-    <div class="lang-switcher">
-        <button onclick="changeLanguage('vi')"><img src="https://flagcdn.com/w40/vn.png"> VN</button>
-        <button onclick="changeLanguage('en')"><img src="https://flagcdn.com/w40/us.png"> EN</button>
+    <div class="header-tools">
+        <span style="font-size: 13px; font-weight: bold; color: #d35400;">🌍 Ngôn ngữ:</span>
+        <select class="custom-lang-select" onchange="changeLanguage(this.value)">
+            <option value="vi">Tiếng Việt</option>
+            <option value="en">English</option>
+            <option value="zh-CN">简体中文</option>
+            <option value="ko">한국어</option>
+            <option value="ja">日本語</option>
+        </select>
     </div>
 
     <div id="google_translate_element"></div>
 
     <div class="logo-wrapper">
         <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
-        <h2 class="notranslate" style="margin:5px 0;">TAX CALCULATOR PRO</h2>
+        <h2 class="notranslate" style="color: #ff4b2b; letter-spacing: -1px;">TAX CALCULATOR PRO</h2>
     </div>
 
     <div class="tab-group">
-        <span class="tab-label">Quy định từ năm 2026 (Luật mới)</span>
+        <span class="tab-label">Năm 2026 (Luật mới)</span>
         <div class="tab-container">
             <div id="tab-gross-2026" class="tab active" onclick="setMode('GROSS', 2026)">Gross → Net</div>
             <div id="tab-net-2026" class="tab" onclick="setMode('NET', 2026)">Net → Gross</div>
@@ -73,7 +144,7 @@
     </div>
 
     <div class="tab-group">
-        <span class="tab-label">Quy định 2025 trở về trước</span>
+        <span class="tab-label">Trước năm 2025 (Luật cũ)</span>
         <div class="tab-container">
             <div id="tab-gross-2025" class="tab" onclick="setMode('GROSS', 2025)">Gross → Net</div>
             <div id="tab-net-2025" class="tab" onclick="setMode('NET', 2025)">Net → Gross</div>
@@ -87,17 +158,17 @@
 
     <div class="grid">
         <div class="form-group">
-            <label>Số người phụ thuộc:</label>
-            <input type="number" id="dependents" value="0" min="0">
+            <label>Người phụ thuộc:</label>
+            <input type="number" id="dependents" value="0">
         </div>
         <div class="form-group">
-            <label>Khoản miễn thuế:</label>
+            <label>Miễn thuế:</label>
             <input type="text" id="nonTaxable" oninput="formatCurrency(this)" value="730,000">
         </div>
     </div>
 
     <div class="form-group">
-        <label>Mức đóng Bảo hiểm:</label>
+        <label>Lương đóng Bảo hiểm:</label>
         <select id="insType" onchange="toggleIns()">
             <option value="full">Đóng trên 100% lương</option>
             <option value="custom">Mức đóng cố định</option>
@@ -105,22 +176,22 @@
         <input type="text" id="insCustom" style="display:none; margin-top:10px;" oninput="formatCurrency(this)" placeholder="Số tiền đóng BH...">
     </div>
 
-    <button class="btn-calc" onclick="process()">TÍNH TOÁN & SO SÁNH</button>
+    <button class="btn-calc" onclick="process()">PHÂN TÍCH THU NHẬP</button>
 
     <div id="print-section">
-        <div style="text-align:center; border-bottom: 3px solid #333; margin-bottom: 20px; padding-bottom: 10px;">
-            <h2 id="out-header" style="margin:0">PHIẾU CHI TIẾT THU NHẬP</h2>
-            <p id="res-mode" style="font-weight:bold; color:var(--accent); margin: 5px;"></p>
+        <div style="text-align:center; border-bottom: 3px solid #ff7e5f; margin-bottom: 20px; padding-bottom: 15px;">
+            <h2 id="out-header" style="margin:0; color: #ff4b2b;">KẾT QUẢ TÍNH TOÁN</h2>
+            <p id="res-mode" style="font-weight:bold; color: #7f8c8d; margin: 5px;"></p>
         </div>
-        <div class="row"><span>Mức lương tính toán:</span> <span id="out-gross" style="font-weight:bold;"></span></div>
-        <div class="row"><span>Bảo hiểm bắt buộc (10.5%):</span> <span id="out-bh"></span></div>
+        <div class="row"><span>Tổng lương (Gross):</span> <span id="out-gross" style="font-weight:bold;"></span></div>
+        <div class="row"><span>Bảo hiểm xã hội (10.5%):</span> <span id="out-bh"></span></div>
         <div class="row"><span>Giảm trừ bản thân:</span> <span id="out-gt-bt"></span></div>
-        <div class="row"><span>Giảm trừ người phụ thuộc:</span> <span id="out-gt-pt"></span></div>
+        <div class="row"><span>Giảm trừ gia cảnh:</span> <span id="out-gt-pt"></span></div>
         <div class="row"><span>Thu nhập tính thuế:</span> <span id="out-tntt"></span></div>
-        <div class="row" style="color:#e74c3c; font-weight:bold;"><span>Thuế TNCN phải nộp:</span> <span id="out-tax"></span></div>
-        <div class="row total"><span>THỰC NHẬN (NET):</span> <span id="out-net" style="color:var(--secondary);"></span></div>
+        <div class="row" style="color:#e74c3c; font-weight:bold;"><span>Thuế TNCN nộp NSNN:</span> <span id="out-tax"></span></div>
+        <div class="row total"><span>THỰC NHẬN (NET):</span> <span id="out-net"></span></div>
         
-        <div id="compare-note" style="margin-top: 20px; padding: 10px; background: #f9f9f9; border-radius: 5px; font-size: 13px;"></div>
+        <div id="compare-note" style="margin-top: 20px; padding: 15px; background: #fff5f2; border-radius: 12px; font-size: 14px; border: 1px solid #ffdcd3;"></div>
     </div>
 
     <div id="btn-group">
@@ -134,29 +205,15 @@
     let currentYear = 2026;
 
     function setMode(m, y) {
-        currentMode = m;
-        currentYear = y;
-        
-        // Reset tất cả tab
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active', 'old'));
-        
-        // Active tab được chọn
-        const targetId = `tab-${m.toLowerCase()}-${y}`;
-        const target = document.getElementById(targetId);
-        target.classList.add('active');
-        if(y === 2025) target.classList.add('old');
-
-        // Cập nhật label
-        const typeStr = m === 'GROSS' ? 'Gross' : 'Net';
-        document.getElementById('income-label').innerText = `Thu nhập ${typeStr} hàng tháng (${y}):`;
+        currentMode = m; currentYear = y;
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(`tab-${m.toLowerCase()}-${y}`).classList.add('active');
+        document.getElementById('income-label').innerText = `Thu nhập ${m === 'GROSS' ? 'Gross' : 'Net'} hàng tháng (${y}):`;
     }
 
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({pageLanguage: 'vi', includedLanguages: 'vi,en'}, 'google_translate_element');
-    }
-
+    function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'vi'}, 'google_translate_element'); }
     function changeLanguage(langCode) {
-        var select = document.querySelector('select.goog-te-combo');
+        const select = document.querySelector('select.goog-te-combo');
         if (select) { select.value = langCode; select.dispatchEvent(new Event('change')); }
     }
 
@@ -164,7 +221,6 @@
         let v = i.value.replace(/\D/g, "");
         i.value = v ? Number(v).toLocaleString('en-US') : "";
     }
-
     function parseV(id) { return parseFloat(document.getElementById(id).value.replace(/,/g, "")) || 0; }
     function toggleIns() { document.getElementById('insCustom').style.display = document.getElementById('insType').value === 'custom' ? 'block' : 'none'; }
 
@@ -172,21 +228,16 @@
         let bh = (iType === 'full' ? gross : iCustom) * 0.105;
         let selfGT = (year === 2026) ? 15500000 : 11000000;
         let depGT = (year === 2026) ? 6200000 : 4400000;
-        let totalGT = selfGT + (deps * depGT);
-        
-        let tntt = Math.max(0, gross - nonTax - bh - totalGT);
-        let tax = 0;
-        let ti = tntt / 1000000;
+        let tntt = Math.max(0, gross - nonTax - bh - (selfGT + deps * depGT));
+        let tax = 0, ti = tntt / 1000000;
 
         if (year === 2026) {
-            // Biểu thuế 5 bậc 2026
             if (ti > 100) tax = (ti - 100) * 0.35 + 20.5;
             else if (ti > 60) tax = (ti - 60) * 0.3 + 8.5;
             else if (ti > 30) tax = (ti - 30) * 0.2 + 2.5;
             else if (ti > 10) tax = (ti - 10) * 0.1 + 0.5;
             else tax = ti * 0.05;
         } else {
-            // Biểu thuế 7 bậc cũ (Trước 2025)
             if (ti > 80) tax = (ti - 80) * 0.35 + 18.15;
             else if (ti > 52) tax = (ti - 52) * 0.3 + 9.75;
             else if (ti > 32) tax = (ti - 32) * 0.25 + 4.75;
@@ -195,9 +246,7 @@
             else if (ti > 5) tax = (ti - 5) * 0.1 + 0.25;
             else tax = ti * 0.05;
         }
-
-        let tFinal = Math.round(tax * 1000000);
-        return { bh, selfGT, depGT: deps*depGT, tntt, tax: tFinal, net: gross - bh - tFinal };
+        return { bh, selfGT, depGT: deps*depGT, tntt, tax: Math.round(tax * 1000000), net: gross - bh - Math.round(tax * 1000000) };
     }
 
     function process() {
@@ -223,17 +272,13 @@
         document.getElementById('out-tntt').innerText = fmt(res.tntt);
         document.getElementById('out-tax').innerText = fmt(res.tax);
         document.getElementById('out-net').innerText = fmt(res.net);
-        
-        document.getElementById('out-header').innerText = `PHIẾU TÍNH THUẾ THEO LUẬT ${currentYear}`;
         document.getElementById('res-mode').innerText = `${currentMode} → NET (${currentYear})`;
         
-        // Tính nhẩm nhanh so sánh
-        let otherYear = (currentYear === 2026) ? 2025 : 2026;
-        let compareRes = calcTax(fGross, nonTax, deps, iType, iCustom, otherYear);
-        let diff = Math.abs(res.tax - compareRes.tax);
-        
-        document.getElementById('compare-note').innerHTML = `<b>So sánh nhanh:</b> Theo quy định năm ${otherYear}, số thuế phải nộp là <b>${fmt(compareRes.tax)}</b>. 
-        ${currentYear === 2026 ? `Bạn tiết kiệm được <b style="color:green">${fmt(diff)}</b> so với luật cũ.` : `Số thuế này cao hơn <b style="color:red">${fmt(diff)}</b> so với luật 2026.`}`;
+        let otherY = (currentYear === 2026) ? 2025 : 2026;
+        let comp = calcTax(fGross, nonTax, deps, iType, iCustom, otherY);
+        let diff = Math.abs(res.tax - comp.tax);
+        document.getElementById('compare-note').innerHTML = `🧡 <b>So sánh nhanh:</b> Năm ${otherY} bạn nộp <b>${fmt(comp.tax)}</b> tiền thuế. 
+        ${currentYear === 2026 ? `Tiết kiệm được <b style="color:#d35400">${fmt(diff)}</b>.` : `Đóng cao hơn <b style="color:#e74c3c">${fmt(diff)}</b> so với luật mới.`}`;
 
         document.getElementById('print-section').className = 'visible';
         document.getElementById('btn-group').style.display = 'grid';
@@ -244,7 +289,7 @@
         const element = document.getElementById('print-section');
         window.scrollTo(0,0);
         const opt = {
-            margin: 0.5, filename: `Thue_TNCN_${currentYear}.pdf`,
+            margin: 0.5, filename: `Tax_Report_${currentYear}.pdf`,
             image: { type: 'jpeg', quality: 1 },
             html2canvas: { scale: 3, useCORS: true },
             jsPDF: { unit: 'in', format: size, orientation: 'portrait' }
